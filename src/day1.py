@@ -1,10 +1,8 @@
-""" Advent Of Code 2024 - Solution of Day 1 """
-
+"""Advent Of Code 2024 - Solution of Day 1."""
 
 
 def solution_day_one_problem_one(puzzle_input: str = "data/day1.dat") -> int:
-    """ Solution of day 1. """
-
+    """Solution of day 1."""
     # Read all lines of puzzle input
     with open(puzzle_input, "r") as f:
         lines = f.readlines()
@@ -14,7 +12,7 @@ def solution_day_one_problem_one(puzzle_input: str = "data/day1.dat") -> int:
 
     # Split the location IDs of group 1 and group 2 and convert them
     # to integer
-    data =  [line.split("   ") for line in lines]
+    data = [line.split("   ") for line in lines]
 
     loc_group1 = [int(loc[0]) for loc in data]
     loc_group2 = [int(loc[1]) for loc in data]
@@ -32,11 +30,7 @@ def solution_day_one_problem_one(puzzle_input: str = "data/day1.dat") -> int:
 
     return total_diff
 
-def main():
-    """ Main function. """
-
-    solution1 = solution_day_one_problem_one()
-    print(solution1)
 
 if __name__ == "__main__":
-    main()
+    solution1 = solution_day_one_problem_one()
+    print(solution1)
