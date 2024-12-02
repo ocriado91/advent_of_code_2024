@@ -46,6 +46,23 @@ def solution_day_one_problem_one(puzzle_input: str = "data/day1.dat") -> int:
     return total_diff
 
 
+def solution_day_one_problem_two(puzzle_input: str = "data/day1.dat") -> int:
+    """Solution of first problem of day 1."""
+    lines = read_puzzle_input(puzzle_input)
+
+    # Extract location IDs by group
+    loc_group1, loc_group2 = extract_location_ids(lines)
+
+    # Compute the similarity score.
+    similarity_score = 0
+    for loc in loc_group1:
+        loc_count = loc_group2.count(loc)
+        similarity_score += loc * loc_count
+    return similarity_score
+
+
 if __name__ == "__main__":
     solution1 = solution_day_one_problem_one()
     print(solution1)
+    solution2 = solution_day_one_problem_two()
+    print(solution2)
