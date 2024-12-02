@@ -1,9 +1,14 @@
-"""Example of Calculator package usage."""
+"""Main script to execute all AoC solutions."""
 
-from calculator import Calculator
+from day1 import solution_day_one_problem_one
+
+
+def main():
+    "Main function."
+
+    # Day One - Problem 1
+    print("Problem 1 - Day 1 Solution:", solution_day_one_problem_one())
+
 
 if __name__ == "__main__":
-    print("10 + 4 = ", Calculator.sum(10, 4))
-    print("10 - 4 = ", Calculator.substract(10, 4))
-    print("10 * 4 = ", Calculator.multiplication(10, 4))
-    print("10 / 4 = ", Calculator.division(10, 4))
+    main()
