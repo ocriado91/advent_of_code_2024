@@ -1,4 +1,4 @@
-"""Calculator package Unit tests."""
+"""Unit Test for AoC Day 1."""
 
 from day1 import (
     read_puzzle_input,
