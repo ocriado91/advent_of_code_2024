@@ -20,58 +20,38 @@ def read_puzzle_input(puzzle_input: str) -> list:
     return reports
 
 
-def _compute_differences(report: list) -> list:
-    """Compute the difference between levels."""
-    diffs = []
-    for idx in range(len(report) - 1):
-        diff = report[idx + 1] - report[idx]
-        diffs.append(diff)
-    return diffs
-
-
-def _check_all_increasing(diff: list) -> int:
-    """Check if difference elements are in increased order."""
-    count = [x > 0 for x in diff].count(True)
-    return count
-
-
-def _check_all_decreasing(diff: list) -> int:
-    """Check if all levels are in decreasing order."""
-    count = [x < 0 for x in diff].count(True)
-    return count
-
-
-def _check_adjacent_levels(diff: list) -> int:
-    """Check adjacent levels levels."""
-    count = [abs(x) <= 3 and abs(x) >= 1 for x in diff].count(True)
-    return count
+def compute_safe(levels: int):
+    """Compute the safe levels."""
+    # Check thresholds into levels and levels +1 lists and check if
+    # all elements are in increasing or decreasing order comparing the values
+    # against the sorted list and reverse sorted list.
+    return all(1 <= abs(x - y) <= 3 for x, y in zip(levels, levels[1:])) and (
+        levels == sorted(levels) or levels == sorted(levels)[::-1]
+    )
 
 
 def solution_day_two_problem_one(puzzle_input: str = "data/day2.dat") -> int:
     """Solution of first problem of day 1."""
     reports = read_puzzle_input(puzzle_input)
+    return sum(compute_safe(report) for report in reports)
 
-    safe_count = 0
+
+def solution_day_two_problem_two(puzzle_input: str = "data/day2.dat") -> int:
+    """Solution of Problem 2 of second day."""
+    reports = read_puzzle_input(puzzle_input)
+    safe_reports = []
     for report in reports:
-        # Compute the difference between two adjency items.
-        diffs = _compute_differences(report)
+        safe_results = []
+        for idx in range(len(report)):
+            replaced_report = report[:idx] + report[idx + 1 :]
+            safe_results.append(compute_safe(replaced_report))
+        safe_reports.append(any(safe_results))
 
-        # Check if all differences are positive or negative (first condition)
-        all_increasing = _check_all_increasing(diffs) == len(diffs)
-        all_decreasing = _check_all_decreasing(diffs) == len(diffs)
-
-        if not all_increasing and not all_decreasing:
-            continue
-
-        # If first condition is meet, check the second condition
-        second_condition = _check_adjacent_levels(diffs) == len(diffs)
-        if not second_condition:
-            continue
-
-        safe_count += 1
-    return safe_count
+    return sum(safe_reports)
 
 
 if __name__ == "__main__":
     solution1 = solution_day_two_problem_one()
     print(solution1)
+    solution2 = solution_day_two_problem_two()
+    print(solution2)
