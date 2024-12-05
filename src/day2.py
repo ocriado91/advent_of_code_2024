@@ -1,4 +1,4 @@
-"""Advent Of Code 2024 - Solution of Day 1."""
+"""Advent Of Code 2024 - Solution of Day 2."""
 
 
 def read_puzzle_input(puzzle_input: str) -> list:
@@ -31,7 +31,7 @@ def compute_safe(levels: int):
 
 
 def solution_day_two_problem_one(puzzle_input: str = "data/day2.dat") -> int:
-    """Solution of first problem of day 1."""
+    """Solution of first problem of day 2."""
     reports = read_puzzle_input(puzzle_input)
     return sum(compute_safe(report) for report in reports)
 
