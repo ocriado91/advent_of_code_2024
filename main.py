@@ -5,6 +5,7 @@ from day2 import solution_day_two_problem_one, solution_day_two_problem_two
 from day3 import solution_day_three_problem_one, solution_day_three_problem_two
 from day4 import solution_day_four_problem_one, solution_day_four_problem_two
 from day5 import solution_day_five_problem_one, solution_day_five_problem_two
+from day6 import Day6
 
 if __name__ == "__main__":
     # Day One - Problem 1
@@ -31,3 +32,7 @@ if __name__ == "__main__":
     print("Problem 1 - Day 5 Solution:", solution_day_five_problem_one())
     # Day Five - Problem 2
     print("Problem 2 - Day 5 Solution:", solution_day_five_problem_two())
+
+    # Day Six
+    day6 = Day6()
+    print("Problem 1 - DAy 6 Solution:", day6.solution_problem_one())
