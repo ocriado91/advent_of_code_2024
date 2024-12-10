@@ -82,7 +82,7 @@ class Day6(Solution):
         visited_positions.append(position)
         # Counter to avoid infinite while loop.
         count = 0
-        count_threshold = 10000
+        count_threshold = 100000
         while count < count_threshold:
             idx = position[0] + direction[0]
             idy = position[1] + direction[1]
@@ -105,24 +105,31 @@ class Day6(Solution):
                     duplicate_positions[position] = direction
                 visited_positions.append(position)
             count += 1
+        guard_stuck_flag = count == count_threshold
         # Plot positions
         self._plot_positions(
             object_positions,
             visited_positions,
             new_object_position,
         )
-        return visited_positions, duplicate_positions
+        return visited_positions, duplicate_positions, guard_stuck_flag
 
     def solution_problem_one(self) -> int:
         """Solution of first problem of AoC Day 6."""
-        visited_positions, _ = self._compute_journey()
+        visited_positions, _, _ = self._compute_journey()
         return len(set(visited_positions))
 
     def solution_problem_two(self) -> int:
         """Solution of second problem of AoC Day 6."""
-        _, duplicate_positions = self._compute_journey()
-        candidate_position = (6, 3)
-        self._compute_journey(candidate_position)
+        _, duplicates, _ = self._compute_journey()
+
+        for duplicate_position in duplicates.keys():
+            x = duplicate_position[0] + duplicates[duplicate_position][0]
+            y = duplicate_position[1] + duplicates[duplicate_position][1]
+            new_object_position = (x, y)
+            print(new_object_position)
+            _, _, guard_stuck_flag = self._compute_journey(new_object_position)
+            print(guard_stuck_flag)
 
 
 if __name__ == "__main__":
