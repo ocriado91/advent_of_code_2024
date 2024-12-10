@@ -37,7 +37,11 @@ class Day6(Solution):
         elif direction == (0, -1):
             return (-1, 0)
 
-    def _plot_positions(self, object_positions: list, positions: list) -> None:
+    def _plot_positions(
+        self,
+        object_positions: list,
+        positions: list,
+    ) -> None:
         """Plot the guard positions."""
         # Object coordinates
         x_obj = [position[0] for position in object_positions]
@@ -50,18 +54,25 @@ class Day6(Solution):
         # Plot first position
         plt.scatter(x[0], y[0], color="red", marker="*", s=50)
         # Plot positions
-        plt.plot(x, y)
+        plt.plot(x, y, color="blue")
         plt.savefig("positions.png")
 
     def _compute_journey(self) -> dict:
         """Extract visited positions."""
         # List to save visited positions by guard.
         visited_positions = []
+        # List to save object positions.
+        object_positions = []
+        # Position - Direction map to store duplicate positions.
+        duplicate_positions = {}
         # Get the starting point and direction of guard and add it
         # to visited position list.
         position, direction = self._check_guard_direction()
         visited_positions.append(position)
-        while True:
+        # Counter to avoid infinite while loop.
+        count = 0
+        count_threshold = 1500
+        while count < count_threshold:
             idx = position[0] + direction[0]
             idy = position[1] + direction[1]
             # Check if new coordinates are within the puzzle input limits.
@@ -72,24 +83,28 @@ class Day6(Solution):
             # Change direction if guard reaches and object.
             if self.lines[idx][idy] == COLLISION_MARK:
                 direction = self._next_direction(direction)
+                object_positions.append((idx, idy))
             else:
                 # Update position value and add it to visited position list
                 position = (idx, idy)
+                if position in visited_positions:
+                    duplicate_positions[position] = direction
                 visited_positions.append(position)
-        return visited_positions
+        # Plot positions
+        self._plot_positions(
+            object_positions,
+            visited_positions,
+        )
+        return visited_positions, duplicate_positions
 
     def solution_problem_one(self) -> int:
         """Solution of first problem of AoC Day 6."""
-        visited_positions = self._compute_journey()
+        visited_positions, _ = self._compute_journey()
         return len(set(visited_positions))
 
     def solution_problem_two(self) -> int:
         """Solution of second problem of AoC Day 6."""
-        visited_positions = self._compute_journey()
-        duplicate_positions = set(
-            [x for x in visited_positions if visited_positions.count(x) > 1]
-        )
-        print(duplicate_positions)
+        _, duplicate_positions = self._compute_journey()
 
 
 if __name__ == "__main__":
