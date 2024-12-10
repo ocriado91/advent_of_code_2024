@@ -41,13 +41,24 @@ class Day6(Solution):
         self,
         object_positions: list,
         positions: list,
+        new_object_position: tuple = None,
     ) -> None:
         """Plot the guard positions."""
+        plt.figure()
         # Object coordinates
         x_obj = [position[0] for position in object_positions]
         y_obj = [position[1] for position in object_positions]
         # Plot object positions
         plt.scatter(x_obj, y_obj, color="green", marker="X", s=50)
+        # Plot new object position
+        if new_object_position:
+            plt.scatter(
+                new_object_position[0],
+                new_object_position[1],
+                color="red",
+                marker="X",
+                s=50,
+            )
         # Split guard position coordinates
         x = [position[0] for position in positions]
         y = [position[1] for position in positions]
@@ -57,7 +68,7 @@ class Day6(Solution):
         plt.plot(x, y, color="blue")
         plt.savefig("positions.png")
 
-    def _compute_journey(self) -> dict:
+    def _compute_journey(self, new_object_position: tuple = None) -> dict:
         """Extract visited positions."""
         # List to save visited positions by guard.
         visited_positions = []
@@ -71,7 +82,7 @@ class Day6(Solution):
         visited_positions.append(position)
         # Counter to avoid infinite while loop.
         count = 0
-        count_threshold = 1500
+        count_threshold = 10000
         while count < count_threshold:
             idx = position[0] + direction[0]
             idy = position[1] + direction[1]
@@ -80,8 +91,11 @@ class Day6(Solution):
                 len(self.lines[0])
             ):
                 break
+            # Check if next position is the same of new object (problem 2).
+            if (idx, idy) == new_object_position:
+                direction = self._next_direction(direction)
             # Change direction if guard reaches and object.
-            if self.lines[idx][idy] == COLLISION_MARK:
+            elif self.lines[idx][idy] == COLLISION_MARK:
                 direction = self._next_direction(direction)
                 object_positions.append((idx, idy))
             else:
@@ -90,10 +104,12 @@ class Day6(Solution):
                 if position in visited_positions:
                     duplicate_positions[position] = direction
                 visited_positions.append(position)
+            count += 1
         # Plot positions
         self._plot_positions(
             object_positions,
             visited_positions,
+            new_object_position,
         )
         return visited_positions, duplicate_positions
 
@@ -105,6 +121,8 @@ class Day6(Solution):
     def solution_problem_two(self) -> int:
         """Solution of second problem of AoC Day 6."""
         _, duplicate_positions = self._compute_journey()
+        candidate_position = (6, 3)
+        self._compute_journey(candidate_position)
 
 
 if __name__ == "__main__":
