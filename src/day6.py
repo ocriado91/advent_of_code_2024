@@ -53,74 +53,43 @@ class Day6(Solution):
         plt.plot(x, y)
         plt.savefig("positions.png")
 
-    def solution_problem_one(self):
-        """Solution of first problem of AoC Day 6."""
-        # Set to save visited positions by guard.
-        visited_positions = set()
-        # Get the starting position and direction of guard and add it
-        # to visited positions set.
+    def _compute_journey(self) -> dict:
+        """Extract visited positions."""
+        # List to save visited positions by guard.
+        visited_positions = []
+        # Get the starting point and direction of guard and add it
+        # to visited position list.
         position, direction = self._check_guard_direction()
-        visited_positions.add(position)
-        # Detect the next collision based on current position and
-        # direction of the guard and extract the next position
-        # where there is a change in the direction of the guard.
+        visited_positions.append(position)
         while True:
             idx = position[0] + direction[0]
             idy = position[1] + direction[1]
-            # Check if new coordinates are within the puzzle input limits
+            # Check if new coordinates are within the puzzle input limits.
             if idx not in range(len(self.lines)) or idy not in range(
                 len(self.lines[0])
             ):
                 break
-            # Change direction if an object is guard reaches an object
+            # Change direction if guard reaches and object.
             if self.lines[idx][idy] == COLLISION_MARK:
                 direction = self._next_direction(direction)
             else:
-                position = (idx, idy)
-                visited_positions.add(position)
-        # Return the number of visited locations (without duplicates, thanks
-        # to save positions into a set previously)
-        return len(visited_positions)
-
-    def solution_problem_two(self):
-        """Solution of second problem of AoC Day 6."""
-        # List to save visited positions by guard.
-        visited_positions = []
-        # List to save object positions.
-        object_positions = []
-        # Get the starting position and direction of guard and add it
-        # to visited positions set.
-        position, direction = self._check_guard_direction()
-        visited_positions.append(position)
-        # Use count to break while loop in case of infinitel loop.
-        count = 0
-        count_threshold = 1400
-        # Detect the next collision based on current position and
-        # direction of the guard and extract the next position
-        # where there is a change in the direction of the guard.
-        while count < count_threshold:
-            idx = position[0] + direction[0]
-            idy = position[1] + direction[1]
-            # Check if new coordinates are within the puzzle input limits
-            if idx not in range(len(self.lines)) or idy not in range(
-                len(self.lines[0])
-            ):
-                break
-            # Change direction if an object is guard reaches an object
-            if self.lines[idx][idy] == COLLISION_MARK:
-                direction = self._next_direction(direction)
-                # Save object position
-                object_positions.append((idx, idy))
-            else:
+                # Update position value and add it to visited position list
                 position = (idx, idy)
                 visited_positions.append(position)
-            count += 1
-        # Plot visited positions
-        self._plot_positions(object_positions, visited_positions)
-        # Convert list to set to remove duplicates
-        visited_positions = set(list(visited_positions))
-        # Return the lenght of visited positions without duplicates
-        return len(visited_positions)
+        return visited_positions
+
+    def solution_problem_one(self) -> int:
+        """Solution of first problem of AoC Day 6."""
+        visited_positions = self._compute_journey()
+        return len(set(visited_positions))
+
+    def solution_problem_two(self) -> int:
+        """Solution of second problem of AoC Day 6."""
+        visited_positions = self._compute_journey()
+        duplicate_positions = set(
+            [x for x in visited_positions if visited_positions.count(x) > 1]
+        )
+        print(duplicate_positions)
 
 
 if __name__ == "__main__":
