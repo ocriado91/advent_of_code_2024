@@ -68,18 +68,18 @@ class Day6(Solution):
         plt.plot(x, y, color="blue")
         plt.savefig("positions.png")
 
-    def _compute_journey(self, new_object_position: tuple = None) -> dict:
+    def _compute_journey(self) -> dict:
         """Extract visited positions."""
-        # List to save visited positions by guard.
+        # List to save visited positions and directions of guard.
         visited_positions = []
+        directions = []
         # List to save object positions.
         object_positions = []
-        # Position - Direction map to store duplicate positions.
-        duplicate_positions = {}
         # Get the starting point and direction of guard and add it
-        # to visited position list.
+        # to visited position and direction lists.
         position, direction = self._check_guard_direction()
         visited_positions.append(position)
+        directions.append(direction)
         # Counter to avoid infinite while loop.
         count = 0
         count_threshold = 100000
@@ -91,45 +91,103 @@ class Day6(Solution):
                 len(self.lines[0])
             ):
                 break
-            # Check if next position is the same of new object (problem 2).
-            if (idx, idy) == new_object_position:
-                direction = self._next_direction(direction)
             # Change direction if guard reaches and object.
-            elif self.lines[idx][idy] == COLLISION_MARK:
+            if self.lines[idx][idy] == COLLISION_MARK:
                 direction = self._next_direction(direction)
-                object_positions.append((idx, idy))
+                object_positions.append(position)
             else:
                 # Update position value and add it to visited position list
                 position = (idx, idy)
-                if position in visited_positions:
-                    duplicate_positions[position] = direction
                 visited_positions.append(position)
+                directions.append(direction)
             count += 1
-        guard_stuck_flag = count == count_threshold
-        # Plot positions
-        self._plot_positions(
-            object_positions,
-            visited_positions,
-            new_object_position,
-        )
-        return visited_positions, duplicate_positions, guard_stuck_flag
+        stuck_flag = count == count_threshold
+        return visited_positions, object_positions, directions, stuck_flag
 
     def solution_problem_one(self) -> int:
         """Solution of first problem of AoC Day 6."""
-        visited_positions, _, _ = self._compute_journey()
+        visited_positions, _, _, _ = self._compute_journey()
         return len(set(visited_positions))
 
     def solution_problem_two(self) -> int:
         """Solution of second problem of AoC Day 6."""
-        _, duplicates, _ = self._compute_journey()
+        candidates = self._candidates_object()
+        print(candidates)
 
-        for duplicate_position in duplicates.keys():
-            x = duplicate_position[0] + duplicates[duplicate_position][0]
-            y = duplicate_position[1] + duplicates[duplicate_position][1]
-            new_object_position = (x, y)
-            print(new_object_position)
-            _, _, guard_stuck_flag = self._compute_journey(new_object_position)
-            print(guard_stuck_flag)
+    def _candidates_object(self) -> list:
+        """Build a list of candidate positions to add the extract object."""
+        # List to store candidate positions to create a infinite loop into
+        # guard path.
+        candidates = []
+        # Extract visited positions and directions take by guard.
+        visited_positions, object_positions, directions, _ = (
+            self._compute_journey()
+        )
+        print(len(visited_positions))
+        print(len(directions))
+        # Extract of each visited position, if the guard could change its
+        # direction to go to previous positions that follows the new direction.
+        for idx in range(len(visited_positions)):
+            # Extract current position and direction
+            current_position = visited_positions[idx]
+            current_direction = directions[idx]
+            # print("Current position:", current_position)
+            # print("Current direction:", current_direction)
+            # Compute the direction of turn.
+            turn_direction = self._next_direction(current_direction)
+            # print("Turn direction:", turn_direction)
+
+            # Extract previous coordinates
+            x_prev = [x[0] for x in visited_positions[:idx]]
+            y_prev = [x[1] for x in visited_positions[:idx]]
+            # print("X prev:", x_prev)
+            # print("Y prev:", y_prev)
+
+            # Check if any current coordinate matches with previous positions
+            # coordinates and also matches the turn direction with the
+            # direction of matched previous position (the guard can follow
+            # the same path through previous positions with the
+            # turn direction).
+            matched_pos_index = None
+            if current_position[0] in x_prev:
+                matched_pos_index = x_prev.index(current_position[0])
+            elif current_position[1] in y_prev:
+                matched_pos_index = y_prev.index(current_position[1])
+            if matched_pos_index is not None:
+                match_pos_direction = directions[matched_pos_index]
+                if match_pos_direction == turn_direction:
+                    print("Detected position:", current_position)
+
+        # # Extract of each visited position, if the guard could change
+        # # its direction to go through previous positions.
+        # for idx in range(len(visited_positions)-1):
+        #     # Compute the current position and direction.
+        #     current_position = visited_positions[idx]
+        #     print("Current position:", current_position)
+        #     current_direction = directions[idx]
+        #     # Compute the next direction based on current direction.
+        #     next_direction = self._next_direction(current_direction)
+        #     # Get the coordinates in next_direction.
+        #     next_position = (
+        #         current_position[0] + next_direction[0],
+        #         current_position[1] + next_direction[1]
+        #     )
+        #     # Check if current position is not in the object position list
+        #     # to avoid extract candidates where a change of direction can be
+        #     # taken by a object in the current direction, and check if
+        #     # next_position is within visited previous positions.
+        #     if (current_position not in object_positions and
+        #         next_position in visited_positions[:idx]):
+        #         # Candidate position to place an object is the next
+        #         # position of current position if guard follows
+        #         # the current direction.
+        #         candidate_posiiton = (
+        #             current_position[0] + current_direction[0],
+        #             current_position[1] + current_direction[1]
+        #         )
+        #         candidates.append(candidate_posiiton)
+        # print("Candidates:", candidates)
+        return candidates
 
 
 if __name__ == "__main__":
