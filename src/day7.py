@@ -73,7 +73,9 @@ class Day7(Solution):
 
     def solution_problem_two(self) -> int:
         """Solution of the second problem of Aoc - Day 7."""
-        sum = 0
+        # Store the operation combinations that match with its expected result
+        # as set to avoid duplicates.
+        matches = set()
         for index in range(len(self.expected_results)):
             expected_result = self.expected_results[index]
             numbers = self.numbers[index]
@@ -105,7 +107,7 @@ class Day7(Solution):
                     ):
                         found = True
                         print(f"Result: {expected_result} : {numbers}")
-                        sum += expected_result
+                        matches.add(expected_result)
                         break
 
                     mult_result = number * result
@@ -117,7 +119,7 @@ class Day7(Solution):
                     ):
                         found = True
                         print(f"Result: {expected_result} : {numbers}")
-                        sum += expected_result
+                        matches.add(expected_result)
                         break
 
                     # Concatenation operation
@@ -130,12 +132,13 @@ class Day7(Solution):
                     ):
                         found = True
                         print(f"Result: {expected_result} : {numbers}")
-                        sum += expected_result
+                        matches.add(expected_result)
                         break
 
                 # Concatenate new results to results.
                 results += new_results
-        return sum
+
+        return sum(matches)
 
 
 if __name__ == "__main__":
