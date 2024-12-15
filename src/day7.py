@@ -71,14 +71,69 @@ class Day7(Solution):
 
     def solution_problem_two(self) -> int:
         """Solution of the second problem of Aoc - Day 7."""
-        solution = 0
-        return solution
+        sum = 0
+        for index in range(len(self.expected_results)):
+            expected_result = self.expected_results[index]
+            numbers = self.numbers[index]
+
+            # Add first number into result list
+            results = []
+            results.append(numbers[0])
+
+            running = False
+            for idx in range(1, len(numbers)):
+                # Break the current loop if any set of operators
+                # match with the expected output or the add operations
+                # exceeds the expected number.
+                if running:
+                    break
+                number = numbers[idx]
+                new_results = []
+                for idy in range(-(3 ** (idx - 1)), 0):
+                    result = results[idy]
+
+                    add_result = number + result
+                    new_results.append(add_result)
+
+                    # Check if adding result matches with the expected
+                    # output and breaks the current loop and set the running
+                    # flag.
+                    if add_result == expected_result:
+                        running = True
+                        print(f"{expected_result}:{numbers}")
+                        sum += expected_result
+                        break
+
+                    mult_result = number * result
+                    new_results.append(mult_result)
+
+                    # Same for multiplication operation.
+                    if mult_result == expected_result:
+                        running = True
+                        print(f"{expected_result}:{numbers}")
+                        sum += expected_result
+                        break
+
+                    # Concatenation operation
+                    concat_result = str(result) + str(number)
+                    concat_result = int(concat_result)
+                    new_results.append(concat_result)
+
+                    if concat_result == expected_result:
+                        running = True
+                        print(f"{expected_result}:{numbers}")
+                        sum += expected_result
+                        break
+
+                # Concatenate new results to results.
+                results += new_results
+        return sum
 
 
 if __name__ == "__main__":
     day7 = Day7()
-    solution1 = day7.solution_problem_one()
-    print("Solution1:", solution1)
+    # solution1 = day7.solution_problem_one()
+    # print("Solution1:", solution1)
 
     solution2 = day7.solution_problem_two()
-    # print(solution2)
+    print(solution2)
