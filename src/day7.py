@@ -33,12 +33,12 @@ class Day7(Solution):
             results = []
             results.append(numbers[0])
 
-            running = False
+            found = False
             for idx in range(1, len(numbers)):
                 # Break the current loop if any set of operators
                 # match with the expected output or the add operations
                 # exceeds the expected number.
-                if running:
+                if found:
                     break
                 number = numbers[idx]
                 new_results = []
@@ -49,10 +49,11 @@ class Day7(Solution):
                     new_results.append(add_result)
 
                     # Check if adding result matches with the expected
-                    # output and breaks the current loop and set the running
+                    # output and breaks the current loop and set the found
                     # flag.
                     if add_result == expected_result:
-                        running = True
+                        found = True
+                        print(f"Result: {expected_result} : {numbers}")
                         sum += expected_result
                         break
 
@@ -61,7 +62,8 @@ class Day7(Solution):
 
                     # Same for multiplication operation.
                     if mult_result == expected_result:
-                        running = True
+                        found = True
+                        print(f"Result: {expected_result} : {numbers}")
                         sum += expected_result
                         break
 
@@ -80,12 +82,12 @@ class Day7(Solution):
             results = []
             results.append(numbers[0])
 
-            running = False
+            found = False
             for idx in range(1, len(numbers)):
                 # Break the current loop if any set of operators
                 # match with the expected output or the add operations
                 # exceeds the expected number.
-                if running:
+                if found:
                     break
                 number = numbers[idx]
                 new_results = []
@@ -96,11 +98,13 @@ class Day7(Solution):
                     new_results.append(add_result)
 
                     # Check if adding result matches with the expected
-                    # output and breaks the current loop and set the running
+                    # output and breaks the current loop and set the found
                     # flag.
-                    if add_result == expected_result:
-                        running = True
-                        print(f"{expected_result}:{numbers}")
+                    if add_result == expected_result and idx + 1 == len(
+                        numbers
+                    ):
+                        found = True
+                        print(f"Result: {expected_result} : {numbers}")
                         sum += expected_result
                         break
 
@@ -108,9 +112,11 @@ class Day7(Solution):
                     new_results.append(mult_result)
 
                     # Same for multiplication operation.
-                    if mult_result == expected_result:
-                        running = True
-                        print(f"{expected_result}:{numbers}")
+                    if mult_result == expected_result and idx + 1 == len(
+                        numbers
+                    ):
+                        found = True
+                        print(f"Result: {expected_result} : {numbers}")
                         sum += expected_result
                         break
 
@@ -119,9 +125,11 @@ class Day7(Solution):
                     concat_result = int(concat_result)
                     new_results.append(concat_result)
 
-                    if concat_result == expected_result:
-                        running = True
-                        print(f"{expected_result}:{numbers}")
+                    if concat_result == expected_result and idx + 1 == len(
+                        numbers
+                    ):
+                        found = True
+                        print(f"Result: {expected_result} : {numbers}")
                         sum += expected_result
                         break
 
@@ -132,8 +140,8 @@ class Day7(Solution):
 
 if __name__ == "__main__":
     day7 = Day7()
-    # solution1 = day7.solution_problem_one()
-    # print("Solution1:", solution1)
+    solution1 = day7.solution_problem_one()
+    print("Solution1:", solution1)
 
     solution2 = day7.solution_problem_two()
     print(solution2)
