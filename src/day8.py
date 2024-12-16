@@ -68,10 +68,13 @@ class Day8(Solution):
         # Extract the difference between each antenna and all antennas of
         # its type and compute the antinode position of each antenna pair.
         for antenna_type in antenna_positions:
+            # Extract the antenna positions by frequency.
             positions = antenna_positions[antenna_type]
-            for idx in range(len(positions)):
-                current_position = positions[idx]
-                next_positions = [
+
+            # For each position, extract others positions and compute
+            # the difference between current and other positions.
+            for idx, current_position in enumerate(positions):
+                other_positions = [
                     pos for i, pos in enumerate(positions) if i != idx
                 ]
                 diffs = [
@@ -79,17 +82,21 @@ class Day8(Solution):
                         next_pos[0] - current_position[0],
                         next_pos[1] - current_position[1],
                     )
-                    for next_pos in next_positions
+                    for next_pos in other_positions
                 ]
-                for next_pos, diff in zip(next_positions, diffs):
-                    x_pos = next_pos[0] + diff[0]
-                    y_pos = next_pos[1] + diff[1]
-                    # Check if x_pos or y_pos is within the grid limits.
-                    if x_pos not in range(
-                        len(self.lines)
-                    ) or y_pos not in range(len(self.lines[0])):
-                        continue
-                    harmonic_antinodes[antenna_type].add((x_pos, y_pos))
+
+                for next_pos, diff in zip(other_positions, diffs):
+                    step = 0
+                    while True:
+                        x_pos = next_pos[0] + diff[0] * step
+                        y_pos = next_pos[1] + diff[1] * step
+                        # Check if x_pos or y_pos is within the grid limits.
+                        if x_pos not in range(
+                            len(self.lines)
+                        ) or y_pos not in range(len(self.lines[0])):
+                            break
+                        step += 1
+                        harmonic_antinodes[antenna_type].add((x_pos, y_pos))
         return harmonic_antinodes
 
     def solution_problem_one(self) -> int:
@@ -121,8 +128,8 @@ class Day8(Solution):
 
 if __name__ == "__main__":
     day8 = Day8()
-    # solution1 = day8.solution_problem_one()
-    # print(solution1)
+    solution1 = day8.solution_problem_one()
+    print(solution1)
 
     solution2 = day8.solution_problem_two()
     print(solution2)
