@@ -34,3 +34,10 @@ def test_solution_day_eight_first_problem():
     day8 = Day8("tests/data/example_day8.dat")
     solution = day8.solution_problem_one()
     assert solution == 14
+
+
+def test_solution_day_eight_second_problem():
+    """Check the example solution of second problem of AoC - Day 8."""
+    day8 = Day8("tests/data/example_day8.dat")
+    solution = day8.solution_problem_two()
+    assert solution == 34
