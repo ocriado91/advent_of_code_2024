@@ -148,3 +148,6 @@ if __name__ == "__main__":
     day9 = Day9()
     solution1 = day9.solution_problem_one()
     print(solution1)
+
+    solution2 = day9.solution_problem_two()
+    print(solution2)

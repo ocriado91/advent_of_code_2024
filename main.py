@@ -54,3 +54,4 @@ if __name__ == "__main__":
     # Day Nine
     day9 = Day9()
     print("Problem 1 - Day 9 Solution:", day9.solution_problem_one())
+    print("Problem 2 - Day 9 Solution:", day9.solution_problem_two())
