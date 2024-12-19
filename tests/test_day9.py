@@ -112,3 +112,10 @@ def test_solution_day_nine_first_problem():
     day9 = Day9("tests/data/example_day9.dat")
     solution = day9.solution_problem_one()
     assert solution == 1928
+
+
+def test_solution_day_nine_second_problem():
+    """Check the example solutuon of the second problem of AoC Day 9."""
+    day9 = Day9("tests/data/example_day9.dat")
+    solution = day9.solution_problem_two()
+    assert solution == 2858

@@ -59,6 +59,53 @@ class Day9(Solution):
             block_files.remove(None)
         return block_files
 
+    def _extract_block_free_sizes(self, block_files: deque) -> deque:
+        """Extract the starting point and the size of the free space blocks."""
+        block_free_index_sizes = []
+        start = 0
+        while True:
+            try:
+                block_id = block_files.index(None, start)
+            except ValueError:
+                break
+            starting_block_id = block_id
+            block_size = 0
+            while block_files[block_id] is None:
+                block_size += 1
+                block_id += 1
+            block_free_index_sizes.append((starting_block_id, block_size))
+            start = block_id
+        return block_free_index_sizes
+
+    def _move_entire_block_files(self, block_files: deque) -> deque:
+        """Move all block sizes to a free space location."""
+        block_id = max(x for x in block_files if x is not None)
+        while block_id > 0:
+            # We need to detect the starting point and the size of the
+            # free space blocks.
+            block_free_index_sizes = self._extract_block_free_sizes(
+                block_files
+            )
+            # Extract the block size of current block ID.
+            block_size = block_files.count(block_id)
+            # Compute the available free blocks for current block size.
+            for start, size in block_free_index_sizes:
+                if block_size > size:
+                    # Current free space block cannot allocate current
+                    # block size. Try with the next one.
+                    continue
+                # Found an available free space size that fits the current
+                # block size. Move the block file to this position
+                count = 0
+                while block_size > count:
+                    block_files[start + count] = block_id
+                    count += 1
+                # Already found a free space block. Break the loop.
+                break
+            # Decrease the block ID to the next iteration.
+            block_id -= 1
+        return block_files
+
     def _update_filesystem_checksum(self, block_files: deque) -> int:
         """Compute the filesystem checksum."""
         sum = 0
@@ -75,7 +122,11 @@ class Day9(Solution):
 
     def solution_problem_two(self) -> int:
         """Solution of the second problem AoC - Day 9."""
-        pass
+        block_files = self._extract_block_files()
+        block_files = self._move_entire_block_files(block_files)
+        print("Block Files:", list(block_files))
+        solution = self._update_filesystem_checksum(block_files)
+        return solution
 
 
 if __name__ == "__main__":
