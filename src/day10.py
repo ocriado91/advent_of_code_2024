@@ -12,6 +12,7 @@ class Day10(Solution):
         Solution.__init__(self, puzzle_input)
 
         self.graph = dict()
+        self.convert_to_graph()
 
     def extact_neighbors(self, position=tuple) -> dict:
         """Compute the neighbors from a given position."""
@@ -78,7 +79,6 @@ class Day10(Solution):
 
     def solution_problem_one(self) -> int:
         """Solution of the first problem of AoC - Day 10."""
-        self.convert_to_graph()
         sum = 0
         for idx, row in enumerate(self.lines):
             cols = row.strip()
@@ -94,12 +94,60 @@ class Day10(Solution):
                     sum += list(trails.values()).count(9)
         return sum
 
+    def extract_number_positions(self, numbe: int = 9):
+        """Extract all positions into the grid of a given number."""
+        positions = []
+        for idx, row in enumerate(self.lines):
+            cols = row.strip()
+            for idy, col in enumerate(cols):
+                if col == "9":
+                    positions.append((idx, idy))
+        return positions
+
+    def depth_first_search(
+        self,
+        node: tuple,
+        previous_value: int = 0,
+        count: int = 0,
+        visited: set = None,
+    ):
+        """Implement a recursive DSF algorithm."""
+        # Initialize visited set if is empty.
+        if visited is None:
+            visited = set()
+
+        # Add node to visited
+        visited.add(node)
+        # Check if current node is within the desired values
+        if node in self.extract_number_positions():
+            count += 1
+
+        # Extract all neighbors of current node and their related values.
+        for neighbor_node, value in self.graph[node].items():
+            diff_value = value - previous_value
+            if diff_value == 1:
+                count = self.depth_first_search(
+                    neighbor_node, value, count, visited
+                )
+        return count
+
     def solution_problem_two(self) -> int:
         """Solution of the second problem of AoC - Day 10."""
-        pass
+        total_count = 0
+        for idx, row in enumerate(self.lines):
+            cols = row.strip()
+            for idy, col in enumerate(cols):
+                if col == "0":
+                    source_node = (idx, idy)
+                    count = self.depth_first_search(source_node)
+                    total_count += count
+        return total_count
 
 
 if __name__ == "__main__":
     day10 = Day10()
     solution1 = day10.solution_problem_one()
     print(solution1)
+
+    solution2 = day10.solution_problem_two()
+    print(solution2)
