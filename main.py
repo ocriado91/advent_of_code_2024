@@ -9,6 +9,8 @@ from day6 import Day6
 from day7 import Day7
 from day8 import Day8
 from day9 import Day9
+from day10 import Day10
+from day11 import Day11
 
 if __name__ == "__main__":
     # Day One - Problem 1
@@ -55,3 +57,13 @@ if __name__ == "__main__":
     day9 = Day9()
     print("Problem 1 - Day 9 Solution:", day9.solution_problem_one())
     print("Problem 2 - Day 9 Solution:", day9.solution_problem_two())
+
+    # Day Ten
+    day10 = Day10()
+    print("Problem 1 - Day 10 Solution:", day10.solution_problem_one())
+    print("Problem 2 - Day 10 Solution:", day10.solution_problem_two())
+
+    # Day Eleven
+    day11 = Day11()
+    print("Problem 1 - Day 11 Solution:", day11.solution_problem_one())
+    print("Problem 2 - Day 11 Solution:", day11.solution_problem_two())
